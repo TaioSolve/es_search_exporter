@@ -4,7 +4,7 @@ from requests_kerberos import HTTPKerberosAuth
 import time
 from prometheus_client import Metric, CollectorRegistry, generate_latest
 
-def collect_es(name, config, host, kerberos, tls):
+def collect_es(name, config, host, kerberos, tls, uname=None, pword=None):
     """Execute a search against Elasticsearch and return prometheus text format for it"""
     try:
         a = None
@@ -13,7 +13,10 @@ def collect_es(name, config, host, kerberos, tls):
         s = ''
         if tls:
             s = 's'
-        r = requests.get("http{}://{}/{}/_search".format(s, host, config['index']),
+        if uname and pword:
+            r = requests.get("http{}://{}/{}/_search".format(s, host, config['index'], auth(uname, pword))
+        else:
+            r = requests.get("http{}://{}/{}/_search".format(s, host, config['index'])
             data = json.dumps({"query": config['query'], "size": 0}),
             auth = a,
         )
