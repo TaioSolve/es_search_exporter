@@ -14,7 +14,7 @@ def collect_es(name, config, host, kerberos, tls, uname=None, pword=None):
         if tls:
             s = 's'
         if uname and pword:
-            r = requests.get("http{}://{}/{}/_search".format(s, host, config['index'], auth(uname, pword))
+            r = requests.get("http{}://{}/{}/_search".format(s, host, config['index']), auth(uname, pword))
         else:
             r = requests.get("http{}://{}/{}/_search".format(s, host, config['index'])
             data = json.dumps({"query": config['query'], "size": 0}),
